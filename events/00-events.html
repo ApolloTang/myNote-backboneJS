@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>events</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+var M = Backbone.Model.extend({});
+
+var M2 = Backbone.Model.extend({
+    initialize: function() {
+        this.listenTo(this, 'change:a', function(){ console.log('change') });
+    }
+    , defaults : { a : new M() }
+});
+
+var m2 = new M2();
+var m3 = new M2();
+
+</script>
+</body>
+</html>

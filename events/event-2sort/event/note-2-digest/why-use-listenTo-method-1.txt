@@ -1,0 +1,27 @@
+listenTo/stopListening methods introduced in Backbone 0.9.9 use on/off methods with some useful addition - they store current event listeners in internal object called _listeners.
+
+The benefit of using this object is that you always know full list of all your listeners - you can iterate over it and remove specific elements from it (remember that listener is just a function and a function is just an object).
+
+So, you can call it this way:
+
+    this.stopListening(emmiting_object, ["reset", "add"]) 
+
+Above will remove "reset" and "remove" listeners from emmiting_object
+
+    this.stopListening(emmiting_object) 
+
+Above will remove all listeners from emmiting_object
+
+    this.stopListening() 
+    
+Above iterate over _listenets object and remove all listeners (this is probably the most usable case).
+    
+So, using this methods you can convert your teardown method to something like this:
+
+    this.teardown = function(){
+      this.stopListening();
+      ...
+    }
+    
+Ref:
+http://stackoverflow.com/questions/14329679/difference-between-backbone-on-off-teardown-and-listento-stoplistening-impleme 

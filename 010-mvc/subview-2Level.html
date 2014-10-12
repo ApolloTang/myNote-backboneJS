@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>subview-2level</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+      // create a 10 instance of model M like: 
+      // models = [  {a:'0a', b:'0b', c:'0c'},
+      //             {a:'1a', b:'1b', c:'1c'} .... ] 
+            var M = Backbone.Model.extend();
+            var models = [];
+            for (var i=0; i<10; i++) {
+                var model = {}
+                 _.each(['a', 'b', 'c', 'd'], function(elm) { model[elm] = i.toString()+elm; });
+                models.push(new M( model ))
+            };
+     
+      // add the created 10 instance of model to collection
+            var COL1 = Backbone.Collection.extend();
+            var col1 = new COL1(models);
+            console.log(_.map(col1.models, function(elm){ return elm.cid; }));
+            console.log(_.map(col1.models, function(elm){ return JSON.stringify(elm.toJSON()); }));
+
+      // define the collection view constructor
+            var CollectionView = Backbone.View.extend({
+                tagName: 'table'
+                 , render: function() {  
+                            var rowContentToDisplay = '';
+							
+							// table header
+							rowContentToDisplay = _.map( ['AA', 'BB', 'CC', 'DD'], 
+							function(elem){ return '<th>' + elem + '</th>'; }  
+							);
+							var $tableRow = $('<tr></tr>').html(rowContentToDisplay);                                
+							this.$el.append($tableRow);	 
+							
+							// table body
+							_.each( this.collection.models, function(model) { // loop through all model						 
+								rowContentToDisplay = '';
+								for (var key in model.attributes) { // loop through all attribute
+									rowContentToDisplay += '<td>' + model.get(key); '</td>';
+								}		
+								$tableRow = $('<tr></tr>').html(rowContentToDisplay);
+								this.$el.append($tableRow);									
+							}, this);	
+                            return this
+                   }//end render                          
+           });
+
+      // define the page view constructor 
+           var PageView = Backbone.View.extend({
+                render: function() {
+                    var col_view = new CollectionView( {collection: col1} );
+                    var htmlToDisplay = col_view.render().el
+                    this.$el.html(htmlToDisplay)
+                 } // end render   
+            });
+            
+      // instantiate a page and call its render method
+            new PageView({el: 'body'}).render();
+            
+           
+            
+   
+
+
+
+
+  
+    
+
+
+
+
+    
+</script>
+</body>
+</html>

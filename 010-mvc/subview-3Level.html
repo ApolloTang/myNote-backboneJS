@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>subview-3level</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+      // create a 10 instances of model M like so: 
+      // models = [  {a:'0a', b:'0b', c:'0c'},
+      //             {a:'1a', b:'1b', c:'1c'} .... ] 
+            var M = Backbone.Model.extend();
+            var models = [];
+            for (var i=0; i<10; i++) {
+                var model = {}
+                 _.each(['a', 'b', 'c', 'd'], function(elm) { model[elm] = i.toString()+elm; });
+                models.push(new M( model ))
+            };
+     
+      // add the created 10 instance of model to collection
+            var COL1 = Backbone.Collection.extend();
+            var col1 = new COL1(models);
+            console.log(_.map(col1.models, function(elm){ return elm.cid; }));
+            console.log(_.map(col1.models, function(elm){ return JSON.stringify(elm.toJSON()); }));
+			
+	  // define the item view
+			var itemView = Backbone.View.extend({
+				  tagName: 'tr'
+				, render: function() {					
+					var rowContent = '';
+					for (var key in this.model.attributes) { // loop through all attribute
+						rowContent += '<td>' + this.model.get(key); '</td>';
+						console.log(rowContent);
+					};
+					this.$el.html(rowContent);
+					return this
+				} // end render
+			});
+
+      // define the collection view
+            var CollectionView = Backbone.View.extend({
+                tagName: 'table'
+                 , render: function() {  
+						var $tableRow = '';
+						// manually create a table row header
+						$tableRow = $('<tr>').html( 
+							_.map( ['AA', 'BB', 'CC', 'DD'], function(elem){return '<th>' + elem + '</th>';} )
+						);                                
+						this.$el.append($tableRow);	 
+						
+						// table body
+						var tableRow = '';
+						_.each( this.collection.models, function(model) { // loop through all model	
+							tableRow = new itemView({model: model}).render().el
+							this.$el.append(tableRow);									
+						}, this);
+						
+						return this
+                   }//end render                          
+           });
+
+      // define the content view
+           var ContentView = Backbone.View.extend({
+                render: function() {
+                    var col_view = new CollectionView( {collection: col1} );
+                    var htmlToDisplay = col_view.render().el
+                    this.$el.html(htmlToDisplay)
+                 } // end render   
+            });
+            
+      // instantiate a page and call its render method
+			var container = 'body'  // placeHolder to insert content
+            new ContentView({el: container}).render();
+            
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>coll-listen-2-model</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+
+var M = Backbone.Model.extend({ });
+
+var C = Backbone.Collection.extend({
+    model: M
+    , initialize: function(options) {
+    }
+    , defaults : { a : new M() }
+    , t : function(){
+       this.tfigger('xx');
+    }
+});
+
+var c = new C([{a: 'a1'}, {a: 'a2'}, {a: 'a3'}]);
+c.on('xx', function(){alert('xx')});
+
+debugger;
+
+
+
+
+</script>
+</body>
+</html>

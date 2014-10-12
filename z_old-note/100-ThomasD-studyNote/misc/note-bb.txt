@@ -1,0 +1,36 @@
+
+In a model
+    If your form have an ID, BB will use PUT to update.
+    if it doesn't have an ID, BB will use POST to create a new item.
+
+    
+2 view events: 
+events: {
+    'submit .class': 'callback_fn_name',
+    'click button':'callback_fn_name'
+    }
+
+38:20
+    
+jQuery actually don't support converting form input data into JSON natively, 
+
+
+
+41:11
+        // example of actual URL: PUT    : /users/1
+        //                        DELETE : /users/1
+        //                        POST   : /users
+        
+43:22
+    In the application build in tutorial, you know your save() is 
+    successful because server response with an id of model saved
+    
+43.40
+    
+router.navigate('hello') will save state of your 
+page (update your url to "example.com/main.html#hello").
+If you want to navigate to the location pass in the "trigger: true" option
+
+    
+    
+46:50

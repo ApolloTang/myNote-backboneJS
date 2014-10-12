@@ -1,0 +1,20 @@
+way to define el:
+
+
+reference to existing DOM
+el: 'body'            // reference by element
+el: '#myId'           // reference by css selector
+el: '#myId .myClass'  // reference by css selector
+
+Create element in DOM
+el: '<div><ul></ul><div>'
+el: $('<div><ul></ul><div>')
+
+set any combination of tagName, id, and/or className:
+    var V = Backbone.View.extend({
+        tagName: 'ul'               // required, defaults to 'div' if not set
+        ,className: 'class1 class2' // optional, 
+        ,id: 'myID'                 // optional
+    });
+
+

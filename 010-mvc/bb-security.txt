@@ -1,0 +1,15 @@
+
+//don't use Model.get() to display user's input, use Model.escape() instead
+
+    var user_says = "<" + "script" + ">alert('hacked')<" + "/script"+">";
+    var M = Backbone.Model.extend();
+    var m1 = new M({user_input : user_says } );
+    var V = Backbone.View.extend({
+            el: 'body'
+            , render: function() { 
+                //var text_to_display = m1.get('user_input');   
+                var text_to_display = m1.escape('user_input');  //<--- [!]
+                $(this.el).html(text_to_display);
+            } 
+    });
+    (new V).render();

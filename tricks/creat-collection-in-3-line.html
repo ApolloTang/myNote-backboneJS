@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>??Title??</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+var models = [];
+for (var i=1; i <= 9; i++) { models.push( new (Backbone.Model.extend())({ a: 'a'+i.toString()}) ) };
+var col1 = new (Backbone.Collection.extend())(models);
+
+console.log(col1.toJSON());
+
+
+
+
+</script>
+</body>
+</html>

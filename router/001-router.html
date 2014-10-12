@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>0001-router.html</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+
+// Routers should always contain at least one route and a function to map the particular route to.
+// Routes intepret anything after “#” tag in the url.
+
+var AppRouter = Backbone.Router.extend({
+	routes: {
+		"post/:id": "getPost",              // match {domain-name}#post/{id} or 
+                                            // 		 {domain-name}#/post/{id} where {id} will be past to the callback
+		"posts/a=:arg1/b=:arg2": "getPosts",// match {domain-name}#posts/a={arg1}/b={arg2} or 
+											//       {domain-name}#/posts/a={arg1}/b={arg2}, 
+											//  	  where {arg1} and {arg2} will be past to the callback
+		"download/*uri": "download",        // match {domain-name}#download/{everything here will match} 
+		"*actions": "catchMiss"          // Backbone will try match the route above first
+                                            // match {domain-name}#{arg} or
+                                            //       {domain-name}#/{arg}
+	},
+	getPost: function(id){
+		console.log(id);
+	},
+	getPosts: function(arg1, arg2) {
+		console.log("arg1 = "+arg1);
+		console.log("arg2 = "+arg2);
+	},
+	download: function(arg) {
+		console.log("uri = "+arg);
+	},
+	catchMiss: function( arg ){
+		// The variable passed in matches the variable in the route definition "actions"
+		console.log('catchMiss called');
+        console.log("arg = "+arg);
+	}
+});
+
+// Initiate the router
+var app_router = new AppRouter;
+
+// Start Backbone history a neccesary step for bookmarkable URL's
+Backbone.history.start();
+
+
+</script>
+</body>
+</html>

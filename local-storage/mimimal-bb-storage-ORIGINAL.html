@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>??Title??</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script src="http://localhost:8001/js/lib/backbone.localStorage-1.1.7.js"></script>
+<script>
+// http://www.mostlystatic.com/2013/01/26/minimal-backbone-localstorage-example.html
+    
+var Note = Backbone.Model.extend({
+    defaults: function(){
+        return {
+            content: "Note created on " + new Date().toISOString()
+        }
+    }
+});
+
+var NoteCollection = Backbone.Collection.extend({
+    model: Note,
+    localStorage: new Backbone.LocalStorage("choose-some-identifier")
+});
+
+var myNotes = new NoteCollection();
+myNotes.fetch();
+var note1 = new Note();
+myNotes.add(note1);
+note1.save();
+
+myNotes.models.forEach(function(model){
+    console.log("Model in collection: " + model.get("content"));
+});     
+    
+</script>
+</body>
+</html>

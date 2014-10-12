@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>004-local-n-remote-in-one-app.html</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script src="http://localhost:8001/js/lib/backbone.localStorage-1.1.7.js"></script>
+<script>
+
+    $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+      options.url = 'http://backbonejs-beginner.herokuapp.com' + options.url;
+    });
+    
+var M = Backbone.Model.extend({ defaults: { date: new Date().toISOString(), id: 0 }});
+var models_attr = [ {firstname: "004 "+ new Date().toISOString(), id:1} ];
+
+var C_local = Backbone.Collection.extend({
+        model: M,
+        localStorage: new Backbone.LocalStorage("storage004")
+    });
+var c_local = new C_local(models_attr);
+c_local.models.forEach( function (model) { model.save(); });
+
+    
+var C_remote = Backbone.Collection.extend({
+        model: M,
+        url: function() {return "/users"} , 
+    });    
+var c_remote = new C_remote(models_attr);
+c_remote.models.forEach( function (model) { model.save(); });
+
+
+   
+    
+    var varify_local = new C_local();
+    varify_local.fetch({
+            success: function() {
+                        _.each( varify_local.models, function(model){
+                            console.log('varify local:', JSON.stringify(model.toJSON()));
+                        });                    
+                    }
+    });
+
+
+setTimeout( function() {
+    var varify_remote = new C_remote();
+    varify_remote.fetch({
+        success: function() {
+                    _.each( varify_remote.models, function(model){
+                        console.log('varify remote:', JSON.stringify(model.toJSON()));
+                    });                    
+                }
+    });
+}, 1000); 
+
+</script>
+</body>
+</html>

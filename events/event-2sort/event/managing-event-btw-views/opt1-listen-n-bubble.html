@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>0001-router.html</title>
+</head>
+<body>
+
+<table id="table"><table>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+var TableView = Backbone.View.extend({
+	   tagName: 'tbody'
+	   , updateTable: function () {
+		   var that = this,
+			   ref = this.collection;
+		   _.invoke(this._itemRowViews, 'remove');
+		   this._itemRowViews = this.collection.map( function ( obj ) {
+					  var v = new ItemView({ model: ref.get(obj) });
+					  that.$el.append(v.render().$el);
+					  that.listenTo( v, 'td:click', that.handleItemClick /*[event buble 3]*/);
+					  return v;
+				  });  
+	   }
+       , render: function() { 
+			console.log(this.$el.html());
+			return this;
+	   }
+	   , handleItemClick: function ( data ) { /*[event buble 4]*/
+				this.trigger('item:click', data); 
+				console.log((new Date).getUTCMilliseconds() + '[4] in TableView.handelItemClick, data=' + data);
+				}
+	});
+var ItemView = Backbone.View.extend({
+        tagName: 'tr' 
+		, events: {"click td":  "handleTdClick" /*[event buble 1]*/}
+	    , handleTdClick : function (e) {
+				console.log();
+				this.trigger('td:click', $(e.target).text() ); 
+				console.log((new Date).getUTCMilliseconds() + '[2] in ItemView.HandleTdClick, target=', $(e.target)); /*[event buble 2]*/}
+        , render: function() { 
+			this.$el.html(_.map(this.model.attributes, function(elem) {return '<td>' + elem + '</td>'}));
+			return this;
+		}		
+	});
+var Models = Backbone.Collection.extend( )
+
+var App = function () {} 
+_.extend(App.prototype
+	, Backbone.Events
+	, {generateModelAttr: generateModelAttr }
+	, { start: function () {
+		  this.tableData = new Models(this.generateModelAttr());
+		  this.table = new TableView({ collection: this.tableData });         
+		  $('#table').html( this.table.render().$el ); 
+		  this.listenTo( this.table, 'item:click', this.handleItemClick /*[event buble 5]*/ );
+		  this.table.updateTable();
+      }
+   , handleItemClick: function ( data ) { /*[event buble 6]*/ 
+			console.log((new Date).getUTCMilliseconds() +'[6] handleItemClick, data=' + data);}
+});
+
+var app = new App;
+app.start();
+
+function generateModelAttr () {
+		var models = [/* { a:'0a', b:'0b', ... },
+		 				 { a:'1a', b:'1b', ... },
+		 					...                    */
+					 ];
+		for (var i = 1; i < 11; i++) {
+			var model = {/* { a:i+'a', b:i+'b', ... } */};
+			model['id'] = i.toString();   // add custom id 
+			_.each(['a', 'b', 'c', 'd'], function(elem) { model[elem] = i.toString() + elem; });
+			models.push(model);
+		}; //end for
+		return models;
+	}
+	
+
+</script>
+</body>
+</html>

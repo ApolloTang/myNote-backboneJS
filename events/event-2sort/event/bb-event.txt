@@ -1,0 +1,62 @@
+:::: Basic Idea
+
+    var obj1={};
+    _.extend(obj1, Backbone.Events);
+    var callBack1 = function(opt) { console.log("hello "+opt)};
+    var callBack2 = function(opt) { console.log("bye "+opt)};
+    obj1.on("event1", callBack1 );
+    obj1.on("event2", callBack2 );
+    obj1.trigger("event1", "world");
+    obj1.trigger("event2", "apollo");
+
+    obj1._events.event1[0].callback  // function (opt) { console.log("hello "+opt)}
+    obj1._events.event2[0].callback  // function (opt) { console.log("bye "+opt)}
+
+
+:::: unbinding
+
+    To unbind callbacks from the event: 
+
+        object1.off("event1", callBack1);
+
+    To unbind all callbacks from the event:, skip the second parameter:
+
+        object1.off("event1");
+
+    To unbind a specific callback from all events, skip the first parameter:
+
+        object1.off(null, callBack1);
+
+    To unbind all callbacks from all events, skip both parameters:
+        
+        object1.off();
+        
+:::: Listening to events on other objects
+        
+    obj2.listenTo( obj1, 'event_that_occurs_in_obj1', callback_defined_elsewhere );
+    obj2.stopListening( obj1 );
+    
+    To stop listening to all objects, run the stopListening() method without parameters: 
+        
+        obj2.stopListening();
+		
+	example: 
+	
+		var obj1={},
+			obj2={};
+		_.extend(obj1, Backbone.Events);
+		_.extend(obj2, Backbone.Events);
+		var callBack = function(opt) { console.log("hello "+opt)};
+		obj2.listenTo(obj1, "evtOnObj1", callBack );
+		obj1.trigger("evtOnObj1", "world");	
+		
+:::: Event on model
+
+		var m = new Backbone.Model({a:'aOld', b:'b'});
+		m.on ('change', function(){console.log('model changed')} );
+		m.set('a','aNew');                                       //  model changed
+		console.log(JSON.stringify( mo.changedAttributes() ));   //  {"a":"aNew"}
+		console.log(m.previous('a') );                           //  aOld
+		console.log(JSON.stringify( m.previousAttributes() ));   //  {"a":"aOld","b":"b"}
+		
+    

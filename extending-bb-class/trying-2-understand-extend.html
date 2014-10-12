@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>??Title??</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+
+var View = function (parameter1,parameter2) {                              /* Create a View constructor function, sort of mimics what is done with the actual Backbone.View found in Backbone.js  */
+    this.IAm = 'View Constructor';
+																		   /*call the first initialize function found in the prototype chain and set its scope to this*/
+    this.initialize.apply(this, arguments);                                //pass arguments array to initialize function
+};
+
+
+View.prototype.initialize = function () {};                                /* Extend the View constructor's prototype with a default empty initialize function to be invoked when no initialize function is passed to the extend() function*/
+
+
+View.extend = function (protoProps, staticProps) {                         /*Create a generic static extend() function for creating sub-classes or what I like to call sub-constructors. Include it as a property on the View constructor function*/
+
+    var parent = this;                                                     /*this is the View constructor function in this code, or the function that extend is a static property*/
+    var child;                                                             /*this will be the sub constructor function, i.e. sub-constructor or specifially in this code subView*/
+
+    if (protoProps && _.has(protoProps, 'constructor')) { /*check for an alternative constructor passed into extend()*/
+        child = protoProps.constructor; /*if found, use that as the sub-constructor*/
+    } else {
+        /*else create a function (i.e. the sub-constructor) that when invoked calls View() constructor passing it arguments from the child function (i.e. the sub-constructor) and setting the context to the child function (i.e. the sub-constructor). This copies over the properties in View constructor*/
+        child = function () {
+            return parent.apply(this, arguments);
+        };
+    }
+    /*add the parents static properties and any staticProps provided to extend(), yes this includes extend() itself on the parent, thus subView() now can call extend() and sub-constructing can go on forever*/
+    _.extend(child, parent, staticProps);
+
+    /*Set the prototype chain to inherit from parent (i.e. View in this code), without calling parent's constructor function.
+    Basicly this connects the prototype chain between our parent constructor (i.e. View in this code) and are child sub-constructor*/
+    var Surrogate = function () {
+        this.constructor = child;
+    };
+    Surrogate.prototype = parent.prototype;
+    child.prototype = new Surrogate();
+
+    /*Add prototype properties to the sub constructor, if supplied. All instances of the sub constructor will inherit these properties */
+    if (protoProps){ _.extend(child.prototype, protoProps);}
+
+    /*Set a static property on sub constructor pointing to the parents prototype, here that's View.prototype*/
+    child.__super__ = parent.prototype;
+
+    return child; /*return the sub constructor all wired up ready to be invoked and inheriting from its parent*/
+};
+
+/*Extend View, creating a sub-constructor function based on the View constructor (i.e. extend the View constructor making subView inherit from View)*/
+var subView = View.extend({
+    protoPropsHere: 'protoProps',
+    Iam: 'subView Constructor',
+    initialize: function (parameter1,parameter2) { //when an instance is created from the subView run initialize
+        console.log('sub-constructor has been used, instance created');
+        console.log('The ' + parameter1 +' '+ parameter2 + ' have been passed');
+        console.log('the value of this:' + this.Iam + ', was correctly set');
+    } 
+}, {
+    staticePropertiesHere: 'staticProperties'
+}
+
+);
+
+/*Verify static property on subView*/
+console.log(subView.staticePropertiesHere);
+
+/*Create an instance of the subView called myView and run initialize function passing it options*/
+var myView = new subView('param1','param2');
+
+/*Verify prototype property on myView*/
+console.log(myView.protoPropsHere);
+
+</script>
+</body>
+</html>

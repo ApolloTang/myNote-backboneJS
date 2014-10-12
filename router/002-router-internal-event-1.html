@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>0001-router.html</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+var router = new (Backbone.Router.extend({
+	routes: {
+		"page/:id": "page"          
+		, "main": "main"        
+		, "*actions": "catchMiss"  
+	}
+	, page: function() {
+		console.log('router callback "page" called');
+	    // this.trigger('route:page');   // [!] no need to trigger, use internal event 
+	}
+	, main: function() {
+		console.log('router callback "main" called');
+		// this.trigger('route:main');      // [!] no need to trigger, use internal event
+	}
+	, catchMiss : function( arg ){
+        console.log("router catchMiss, arg = "+arg);
+	}
+}));
+
+var handlePage = function() {console.log('handlePage fired')}
+var handleMain = function() {console.log('handleMain fired')}
+var handleRoute = function( router, route, params) {
+	console.log('handleRoute fired')
+    console.log('in handleRoute, router =', router);
+	console.log('in handleRoute, route =', route);
+	console.log('in handleRoute, params =', params);	
+} 
+
+router.on( 'route:page', handlePage );
+router.on( 'route:main', handleMain );
+router.on( 'route', handleRoute );
+
+Backbone.history.start();
+
+</script>
+</body>
+</html>

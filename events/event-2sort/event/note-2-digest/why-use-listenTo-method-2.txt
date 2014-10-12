@@ -1,0 +1,33 @@
+Copying an extract from an interesting blog post [1] that I read recently. Hope it helps.
+
+Avoiding common backbone pitfalls: Creating memory leaks by not unbinding events
+
+A common pattern in Backbone.js is creating views that listen on changes in models or collections. This technique is usually intended to allow the view to automatically re-render itself when the underlying data changes. It also means that for large collections we may end up with many views (at least one for every model in the collection) that we may dynamically create or destroy based on changes to the data.
+
+The problem arises when we remove a view (usually by calling its .remove() method), but forgetting to unbind the methods that listen on model changes. In such a case, even though our code may no longer hold a reference to that view, it is never garbage collected since the model still holds such a reference via the event handler.
+
+Take this view for example:
+
+    var SomeModelView = Backbone.View.extend({
+       initialize: function() {
+         this.model.on('change', this.render, this);
+       },
+       render: function() {
+         // render a template
+       }
+    });
+    
+When calling the .remove() method, the "change" event handler (our render function) is still bound. So while the DOM element may be removed, the view object itself is never released from memory.
+
+Solving this is easy (especially since Backbone 0.9.x) - all we need to do is to stop using .on() when binding the event handler. instead, we can use the new .listenTo() method, like this:
+
+    initialize: function() {
+        this.listenTo(this.model, 'change', this.render);
+    }
+
+The biggest difference here being the shift in responsibility from the model to the view. This means that whenever we call .remove(), the view will automatically unbind any event bound to it using the .listenTo() method, essentially fixing this common leak.
+
+ref: 
+[this] http://stackoverflow.com/questions/15645506/should-all-backbone-on-off-events-be-replaced-with-listento-stoplistening
+
+[1] http://ozkatz.github.io/avoiding-common-backbonejs-pitfalls.html?tagref=js

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>00-02-c-cat-collection.html</title>
+<!--   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.1/css/bootstrap.min.css"> -->
+</head>
+<body>
+
+<div id="container">
+    <button id='event-button-1'>showAllCat</button>
+    <button id='event-button-2'>add2cats</button>
+    <button id='event-button-3'>removeLucy</button>
+</div>
+  
+  
+<script src="http://code.jquery.com/jquery-1.8.0.js"></script>
+<script src="http://apollotang.com/cdn/lib/js/underscore-1.4.2.js"></script>
+<script src="http://apollotang.com/cdn/lib/js/backbone-0.9.2.js"></script>
+<script src="http://apollotang.com/cdn/lib/js/safe-console.js"></script>
+<script src="http://apollotang.com/cdn//lib/js/_o_/_o_0.0.1.js"></script>
+
+
+    <script type="text/template" id="album-template">
+      <span class="album-title"><%= title %></span>
+      <span class="artist-name"><%= artist %></span>
+      <ol class="tracks">
+        <% _.each(tracks, function(track) { %>
+          <li><%= track.title %></li>
+        <% }); %>
+      </ol>
+    </script>
+
+
+<script type="text/javascript">
+console.log('jQuery version ' + jQuery().jquery);
+console.log("- - - - - - Script begin - - - - - -");
+
+
+    var Cat = Backbone.Model.extend({
+        makeSound: function (arg) { console.log ("cat say: " + arg);}
+    });
+
+    
+    var Cats = Backbone.Collection.extend({
+        model: Cat
+    });
+    
+    var CatsView  = Backbone.View.extend({
+        el: $('#container')    // <--- backbone only listen to event in "el"
+        , initialize: function () {
+            _.bindAll(this
+                , 'render' 
+                , 'showAllCat'
+                , 'add2cats'
+                , 'removeLucy'
+            );
+            this.collection.model.prototype.makeSound('meow');  // <- access model method
+        }
+        , render : function (arg) {
+                var text_to_inject = "</br>" + arg; 
+                this.$el.append( text_to_inject + "<hr>");
+        }
+        , events: {
+            'click button#event-button-1': 'showAllCat'
+            ,'click button#event-button-2': 'add2cats'
+            ,'click button#event-button-3': 'removeLucy'
+        }
+        , showAllCat : function () {
+            var theCollectionStr = JSON.stringify(this.collection);
+            console.log(this.collection)
+            this.render(theCollectionStr);
+        }
+        , add2cats : function () {
+            this.collection.add(catObjArray2);
+        }
+        , removeLucy : function () {
+            var lucy = this.collection.where({name : "lucy"} );
+            var lucyID = lucy[0].get('id');
+            this.collection.remove(lucyID);  
+        }
+    });
+    
+    var catObj1 = { color : "black",  name : "lucy",   id: "fet3w0bi2grruiwejnfhnh" };
+    var catObj2 = { color : "red",    name : "brian",  id: "jhut3w0rbi28ikifejuydf" };
+    var catObj3 = { color : "blue",   name : "sally",   id: "litegw0rbi28fgrqtkli9o" };
+    
+    var catObj4 = { color : "green",  name : "amanda", id: "jfafewfeei28fgrqtkli67" };
+    var catObj5 = { color : "white",  name : "mike",   id: "ethfewfeei28fgrqtklrgy" };
+    
+    var catObjArray1 = [ catObj1, catObj2, catObj3 ];
+    var catObjArray2 = [ catObj4, catObj5 ];     
+    
+    var cats = new Cats( catObjArray1 );  // <--- according to doc this is the way to pass collection into constructor     
+    var catsView = new CatsView( {collection: cats} );  // the collections of cat is can be access via catsView.collection
+    
+    
+console.log("- - - - - - End of script reached - - - - - -"); 
+</script>  
+</body>
+</html> 

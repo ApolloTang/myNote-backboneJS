@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>??Title??</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+               
+                
+var Note = Backbone.Model.extend({
+ LaunchNote: function() { 
+    console.log('LaunchNote method called');
+    this.trigger('fireMe');
+    } 
+});
+
+var note1 = new Note;
+note1.on('fireMe', function (a) { console.log('fired'); });
+
+</script>
+</body>
+</html>

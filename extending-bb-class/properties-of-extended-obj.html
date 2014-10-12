@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>??Title??</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+M_base = Backbone.Model.extend({
+	  aP : 'base'
+	, aM : function(){ console.log('base')}
+});
+M_extended = M_base.extend({
+	  bP : 'extended'
+	, bM : function(){ console.log('extended')}
+});
+
+m1 = new M_base();
+
+m2 = new M_extended();
+
+
+console.log('m2');
+console.log(m2);    						//["cid", "attributes", "_changing", "_previousAttributes", "changed", "_pending"]
+
+console.log('\n Object.keys(m2)');
+console.log(Object.keys(m2));    						//["cid", "attributes", "_changing", "_previousAttributes", "changed", "_pending"]
+
+console.log('\n Object.getPrototypeOf(m2)');
+console.log(Object.getPrototypeOf(m2));  				// Surrogate {constructor: function, bP: "extended", bM: function, aP: "base", aM: function…} 
+
+console.log('\n Object.keys(Object.getPrototypeOf(m2))');
+console.log(Object.keys(Object.getPrototypeOf(m2)));  	//["constructor", "bP", "bM"] 
+
+var result = '';
+for ( var prop in m2) {
+result += prop + ', ';
+}
+console.log('\n for ( var prop in m2)');
+console.log(result);
+
+
+result = '\n for ( var prop in Object.getPrototypeOf(m2) )\n';
+for ( var prop in Object.getPrototypeOf(m2) ) {
+result += prop + ', ';
+}
+console.log('');
+console.log(result);
+
+
+</script>
+</body>
+</html>

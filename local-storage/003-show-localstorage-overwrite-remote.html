@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>002-show-localstorage-overwrite-remote.html</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script src="http://localhost:8001/js/lib/backbone.localStorage-1.1.7.js"></script>
+<script>
+
+    $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+      options.url = 'http://backbonejs-beginner.herokuapp.com' + options.url;
+    });
+    
+var M = Backbone.Model.extend({
+    defaults: { date: new Date().toISOString(),
+                id: 0 }
+});
+
+var C = Backbone.Collection.extend({
+        model: M,
+        url: function() {return "/users"} , //< ---- this url will not be use because is overwritten by local storage
+        localStorage: new Backbone.LocalStorage("myStorage003")
+    });
+
+var models_attr = [
+    {date: new Date().toISOString(), id:1}
+    , {date: new Date().toISOString(), id:2}
+];
+
+var c1 = new C(models_attr);
+
+c1.models.forEach( function (model) { model.save(); });
+
+var c2 = new C();
+ c2.fetch({
+            success: function() {
+                        _.each( c2.models, function(model){
+                            console.log('varify:', JSON.stringify(model.toJSON()));
+                        });                    
+                    }
+    });     
+    
+ 
+</script>
+</body>
+</html>

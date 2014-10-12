@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>002-graft-localstorage-on-prototype.html</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script src="http://localhost:8001/js/lib/backbone.localStorage-1.1.7.js"></script>
+<script>
+
+var M = Backbone.Model.extend({ defaults: { date: new Date().toISOString(),  id: 0 } });
+var C = Backbone.Collection.extend({
+    model: M});
+
+/* you can graft localStorage to extension of Collection Constructor */    
+C.prototype.localStorage =  new Backbone.LocalStorage("myStorage002")
+
+var models_attr = [
+    {date: new Date().toISOString(), id:1}
+    , {date: new Date().toISOString(), id:2}
+];
+
+var c1 = new C(models_attr);
+
+c1.models.forEach( function (model) { model.save(); });
+
+var c2 = new C();
+ c2.fetch({
+            success: function() {
+                        _.each( c2.models, function(model){
+                            console.log('varify:', JSON.stringify(model.toJSON()));
+                        });                    
+                    }
+    });      
+    
+ 
+</script>
+</body>
+</html>

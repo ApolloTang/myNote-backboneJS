@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>??Title??</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+M = Backbone.Model.extend()
+m1 = new M({a:'a'});
+
+// same as above, but in one line 
+m2 = new  (Backbone.Model.extend())({b:'b'});
+
+// memonic: substitude M with ( Backbone.Model.extend() )
+
+console.log('m1:attr =',JSON.stringify(m1.toJSON()));
+console.log('m2:attr =',JSON.stringify(m2.toJSON()))
+
+
+</script>
+</body>
+</html>

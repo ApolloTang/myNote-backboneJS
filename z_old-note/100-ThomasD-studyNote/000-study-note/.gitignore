@@ -1,0 +1,5 @@
+mongoose-3.3.exe
+*.sln
+web.config
+*.suo
+*.bak

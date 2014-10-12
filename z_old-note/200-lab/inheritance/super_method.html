@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>super_method.html</title>
+  <meta name="viewport" content="width=device-width">
+
+<style type="text/css" >
+</style>
+
+</head>
+
+<body>
+
+<!-- Here is the template -->
+    <script type="text/template" id="search_template">
+        <!-- Access template variables with <% %> -->
+        <label><%= search_label %></label>
+         <input type="text" id="search_input" />
+         <input type="button" id="search_button" value="Search" />
+    </script>
+    
+
+<div id="search_container"></div>
+
+
+
+
+<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script-->
+<script>window.jQuery || document.write('<script src="../lib/js/jquery-1.7.1.js"><\/script>')</script>
+<script src="../lib/js/underscore-1.3.3.js"></script>
+<script src="../lib/js/backbone-0.9.2.js"></script>
+<script src="../lib/js/safe-console.js"></script>
+<script type="text/javascript">
+console.log('jq directory: ../lib/js/jquery-1.7.1.js; jQuery version ' + jQuery().jquery);
+console.log("- - - - - - Script begin - - - - - -");
+
+// This method gives you an easier way of calling super
+// when you're using Backbone in plain javascript.
+// It lets you avoid writing the constructor's name multiple
+// times. You still have to specify the name of the method.
+//
+// So instead of having to write:
+//
+//   User = Backbone.Model.extend({
+//     save: function(attrs) {
+//       this.beforeSave(attrs);
+//       return User.__super__.save.apply(this, arguments);
+//     }
+//   });
+//
+// You get to write:
+//
+//   User = Backbone.Model.extend({
+//     save: function(attrs) {
+//       this.beforeSave(attrs);
+//       return this._super("save", arguments);
+//     }
+//   });
+//
+// credit: http://pivotallabs.com/users/mbrunsfeld/blog/articles/1999-a-convenient-super-method-for-backbone-js
+// https://gist.github.com/1542120
+
+
+;(function(Backbone) {
+
+  // The super method takes two parameters: a method name
+  // and an array of arguments to pass to the overridden method.
+  // This is to optimize for the common case of passing 'arguments'.
+  function _super(methodName, args) {
+
+    // Keep track of how far up the prototype chain we have traversed,
+    // in order to handle nested calls to _super.
+    this._superCallObjects || (this._superCallObjects = {});
+    var currentObject = this._superCallObjects[methodName] || this,
+        parentObject  = findSuper(methodName, currentObject);
+    this._superCallObjects[methodName] = parentObject;
+
+    var result = parentObject[methodName].apply(this, args || []);
+    delete this._superCallObjects[methodName];
+    return result;
+  }
+
+  // Find the next object up the prototype chain that has a
+  // different implementation of the method.
+  function findSuper(methodName, childObject) {
+    var object = childObject;
+    while (object[methodName] === childObject[methodName]) {
+      object = object.constructor.__super__;
+    }
+    return object;
+  }
+
+  _.each(["Model", "Collection", "View", "Router"], function(klass) {
+    Backbone[klass].prototype._super = _super;
+  });
+
+})(Backbone);
+
+Friend = Backbone.Model.extend({
+    greet: function(personName, timeOfDay) {
+        return "Good " + timeOfDay + ", " + personName + ". My name is " + this.get("name") + ".";
+    }
+});
+
+var friend = new Friend({name: "Lee"});
+
+console.log(friend.greet("apollo", "morning"));
+console.log("friend: ", friend);
+
+Animal = Friend.extend({ eats: "food" });
+var animal = new Animal();
+console.log("animal: ", animal);
+
+Mammal = Animal.extend({
+    greet: function(personName, timeOfDay) {
+        return this._super("greet", arguments) + " I'm a mammal.";
+    }
+});
+
+var mammal = new Mammal({name: "Moo"})
+console.log(mammal.greet("apollo", "morning"));
+
+Pet = Mammal.extend({ livesInCaptivity: true });
+
+Dog = Pet.extend({
+    greet: function(person, timeOfDay) {
+        return this._super("greet", arguments) + " Ruff ruff!";
+    }
+});
+
+var dog = new Dog({name: "Fido"});
+console.log(dog.greet("apollo", "morning"));
+
+CockerSpaniel = Dog.extend({ cute: true });
+
+var cockerSpaniel = new CockerSpaniel({name: "Sam"});
+console.log(cockerSpaniel.greet("apollo", "morning"));
+
+
+console.log("- - - - - - End of script reached - - - - - -");
+</script>	
+</body>
+
+</html>

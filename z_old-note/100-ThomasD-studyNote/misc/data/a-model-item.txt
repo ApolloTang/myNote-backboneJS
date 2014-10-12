@@ -1,0 +1,7 @@
+http://backbonejs-beginner.herokuapp.com/users/h9e3pozd7gtbc3wdfie
+
+{
+    "firstname": "Youssef",
+    "lastname": "77777",
+    "age": 0
+}

@@ -1,0 +1,32 @@
+ 
+ http://arturadib.com/hello-backbonejs/docs/3.html
+ 
+
+     var List = Backbone.Collection.extend({ model: Item }); 
+     var ListView = Backbone.View.extend({
+        
+        events: { 'click button#add': 'addItem'  },
+        initialize: function(){
+          _.bindAll(this, 'render', 'addItem', 'appendItem'); // remember: every function that uses 'this' as the current object should be in here
+          this.collection = new List();
+          this.collection.bind('add', this.appendItem); // collection event binder
+           //...     
+        },
+        render: function(){             },
+        addItem: function(){                 },
+        appendItem: function(item){                   }
+      });
+
+      var listView = new ListView();
+      
+http://arturadib.com/hello-backbonejs/docs/4.html
+      
+    var ListView = Backbone.View.extend({
+        el: $('body'), // el attaches to existing element
+        events: {
+            'click button#add': 'addItem'
+        }
+        
+        //...
+        
+        }

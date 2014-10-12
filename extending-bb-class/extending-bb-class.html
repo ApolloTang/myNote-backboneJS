@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>??Title??</title>
+</head>
+<body>
+<p id="a">a </p>
+<p id="b">b </p>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+V = Backbone.View.extend({
+el: "body"
+, events:  {"click #a": "click_a"}
+, click_a : function() {console.log("a Clicked")} 
+});
+
+Vextra = V.extend({
+	events: {"click #a": "click_a", "click #b": "click_b"}
+	, click_b  : function() {console.log("b Clicked")} 
+	});
+
+v = new Vextra()
+
+
+</script>
+</body>
+</html>

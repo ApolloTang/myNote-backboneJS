@@ -1,0 +1,30 @@
+When you do:
+
+    var ViewName = Backbone.View.extend({  
+       initialize: function(){  
+          this.$el.on("eventName", this.functionName, this)  
+       },  
+       functionName: function(){  
+        //whatever  
+       }  
+    });
+
+You have to manually unbind the event when the view is being removed. So, you would have to do something like:
+
+    var ViewName = Backbone.View.extend({  
+       initialize: function(){  
+          this.$el.on("eventName", this.functionName, this)  
+       },  
+       functionName: function(){  
+        //whatever  
+       },
+       remove: function() {
+          this.$el.off("eventName", this.functionName);
+          Backbone.View.prototype.remove.apply(this, arguments);
+       }  
+    });
+
+If you use the events hash, Backbone takes care of undelegating events when the view is removed. This is all explained in this section of the Backbone.js annotated source.
+
+Ref:
+http://stackoverflow.com/questions/19148259/backbone-js-initialize-listeners-vs-events

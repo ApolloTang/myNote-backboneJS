@@ -1,0 +1,122 @@
+
+
+Assigning reference to DOM element in Document at instantiation: 
+     
+    var V = Backbone.View.extend();
+    var v1 = new V({el:'#footer'});
+
+Assigning reference to DOM element in Document during constructor definition:
+
+    var V = Backbone.View.extend({el:'#footer'});
+    var v1 = new v()
+    
+Can aslo assign reference to DOM element in Document after instantiation: 
+     
+    var V = Backbone.View.extend();
+    var v1 = new V();
+    v1.setElement('#footer');
+    
+    
+Method: 
+        v1.setElement()  // can be use to override reference to DOM element.
+        v1.remove()      // remove its elements from the DOM and stop listening to events
+
+- - - - - - - --
+You don't need to wrap CSS selector in jquery wrapper 
+when refrencing DOM:
+
+    var V = Backbone.View.extend({});
+    var v1 = new V({el:'#footer'});
+    var v2 = new V({el:$('#footer')});
+
+    var V3 = Backbone.View.extend({el:'#footer'});
+    var V4 = Backbone.View.extend({el:$('#footer')});
+    var v3 = new V3();
+    var v4 = new V4();
+
+In the above, v1.el, v2.el, v3.el, and v4.el are equivilant way
+of refrencing DOM element of <div id="#footer"></div> in the Document.
+
+- - - - - - -
+
+Given:
+
+    var V = Backbone.View.extend();
+    var v1 = new V({el:'#footer'});
+
+The following are equivalent:
+
+    $('#footer .active')
+    v1.$('.active')
+    $(v1.el).find('.active')
+    v1.$el.find('.active')
+
+- - - - - - - - - -     
+
+There are two ways to associate a DOM element with a view: 
+
+    1. reference to an element that already exists in the page (as seen above).
+    2. a new element can be created for the view and subsequently added to the DOM, 
+
+To create a new element for your view, set any combination of the following
+properties on the view: 
+
+    tagName, id, and/or className. 
+    
+then backbone will create a new element for you, with the 
+reference to it available at the el property. 
+
+If nothing is specified to tagName, the default element is <div>.
+
+    var V = Backbone.View.extend({
+        tagName: 'ul'               // required, defaults to 'div' if not set
+        ,className: 'class1 class2' // optional, 
+        ,id: 'myID'                 // optional
+    });
+    v1 = new V()
+    v1.el    
+    
+In the above, a DOM element:
+
+    <ul id=?"myID" class=?"class1 class2"></ul>
+
+is created in the memory and assign to reference v1.el
+
+
+- - - - - - - - - - - 
+
+Manually create a dom element with jQuery wrapper
+and attach it to View.el
+
+    var button1 = $('<button id="b1"></button>');
+    var button2 = $('<button id="b2"></button>');
+    var V = Backbone.View.extend({el: button1});
+    var v1 = new V;
+    console.log(v1.$el.attr('id'));   // b1    
+    v1.setElement(button2);
+    console.log(v1.$el.attr('id'));   // b2
+    
+- - - - - - - - - - - -
+
+Provide raw markup to setElement (just to demonstrate it can be done):
+
+    var v = new Backbone.View;
+    v.setElement('<p><a><b>test</b></a></p>');
+    v.$('a').html();                // "<b>test</b>"
+    v.$('a b').html();              // "test"
+
+- - - - - - - - - - - - -
+
+ 
+When declaring a view, you can define options, el, tagName, id, and
+className as functions, if you want their values to be determined at
+runtime.
+
+
+
+- - - - - - - - - - - - - -
+
+
+
+
+    

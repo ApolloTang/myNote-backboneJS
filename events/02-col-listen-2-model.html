@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>coll-listen-2-model</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+
+var M = Backbone.Model.extend({ });
+
+var C = Backbone.Collection.extend({
+    model: M
+    , initialize: function(options) {
+        this.listenTo( this, 'change:a', this.aChanged, 'stuff_a'  );
+        this.on('change:b', this.bChanged, 'stuff_b'  );
+        m = {};
+    }
+    , aChanged : function(){ console.log('a change:', arguments); }
+    , bChanged : function(){ console.log('b change:', arguments); }
+});
+
+    m1 =  new M({a: true, b: true})
+    m2 =  new M({a: true, b: true})
+    m3 =  new M({a: true, b: true})
+
+var c1 = new C([ m1, m2, m3 ]);
+
+c = function(){
+    c1.each(function(i){
+        console.log( i.toJSON() );
+    });
+}
+
+
+</script>
+</body>
+</html>

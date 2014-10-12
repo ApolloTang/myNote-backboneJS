@@ -1,0 +1,30 @@
+If you're triggering an event on v1 with:
+
+    this.trigger('myEvent'); // this is v1
+
+then you'd have to listen to events from v1 with:
+
+    v1.on('myEvent', this.myFunc); // this is, say, v2 here.
+
+The events aren't global, they come from specific objects and you have to listen to those specific objects if you want to receive their events.
+
+If you bind the views directly to each other, you'll quickly have a tangled mess where everything is directly tied to everything else. The usual solution is to create your own event bus:
+
+    // Put this where ever it makes sense for your application, possibly
+    // a global, possible something your your app's global namespace, ...
+    var event_bus = _({}).extend(Backbone.Events);
+  
+Then v1 would send events through the event_bus:
+
+    event_bus.trigger('myEvent');
+
+and v2 would listen to the event_bus:
+
+    this.listenTo(event_bus, 'myEvent', this.myFunc);
+
+    I've also switched from bind to listenTo since listenTo makes it easier to prevent zombies.
+
+Demo: http://jsfiddle.net/ambiguous/yb9TY/
+
+Ref: 
+http://stackoverflow.com/questions/20816810/backbone-dispatch-listen-to-events-between-views
