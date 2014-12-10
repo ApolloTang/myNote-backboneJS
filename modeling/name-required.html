@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>modeling</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+var M_sub = Backbone.Model.extend()
+var M = Backbone.Model.extend({
+    defaults: {
+          sub1: new Backbone.Collection.extend({ model: M_sub })
+        , sub2: new Backbone.Collection.extend({ model: M_sub })
+    }
+});
+
+m1 =  new M();
+
+
+</script>
+</body>
+</html>
