@@ -1,0 +1,59 @@
+
+
+:: Client id (cid)
+
+    cid is a uniquly assigned identifier for each instance of model:
+
+:: Manually attach an id to instant of model:
+
+    var M = Backbone.Model.extend();
+    var m1 = new M;
+    m1.id = Math.random().toString(36).substr(2)   // set custom id
+    console.log(m1.id);                            // get custom id
+
+:: Manually attached an id to Constructor
+
+       var Meal = Backbone.Model.extend({ idAttribute: "_id" });
+
+
+
+Backbone.js - id vs idAttribute vs cid
+=======================================
+
+ref:
+http://stackoverflow.com/questions/12169822/backbone-js-id-vs-idattribute-vs-cid
+
+
+what is the connection between ID, CID and idAttribute ? how
+do they affect each other?
+
+    Both the cid and id should be unique id's for the model, and
+    can be used to retrieve a model from a collection.
+
+    *cid* is assigned by backbone.js client side and is useful if you
+    don't have an actual id, either because the model hasn't been
+    saved yet to the server or perhaps you aren't even saving it
+    to a db (maybe your using localStorage).
+
+
+    The *id* attribute should be the id of the model that comes from
+    your server (that is what the id is in your db .
+
+    *idAttribute* tells backbone which "field" (in the model attribute
+    coming from your server it should use to update the id attribute.
+    By default this is set to "id", but as it says in the documentation
+    if your server uses something else you can set it to that (the
+    example given is setting it to "_id".
+
+when exactly do a new model gets its ID ?
+is that the server assigning it?
+do I need to write it down in the "defaults" of the Model (maybe
+as a function?) ?
+maybe the "addNewModel" function should do that?
+
+    They should get the new id's when saved to the server and you
+    shouldn't need to set it manually (based on the idattribute) unless
+    you need more control over the process.
+
+
+
