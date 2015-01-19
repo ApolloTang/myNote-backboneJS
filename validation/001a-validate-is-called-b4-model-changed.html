@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>validation</title>
+</head>
+<body>
+<script src="http://localhost:8001/js/lib/jquery-1.11.0.js"></script>
+<script src="http://localhost:8001/js/lib/underscore-1.4.4.js"></script>
+<script src="http://localhost:8001/js/lib/backbone-1.1.1.js"></script>
+<script>
+
+// this is to show that validate does not see model change
+
+M = Backbone.Model.extend({
+    defaults : {
+        a : 'a'
+    },
+    validate: function(){
+        console.log ( 'in validate:', this.toJSON())
+        console.log ( "in validate:, shouldn't the above be {a:b} ?")
+    }
+})
+
+var m = new M()
+
+    m.on('change', function(){
+        console.log(' model changed: ', m.toJSON() );
+    });
+
+m.set({'a':'b'}, {'validate': true});
+
+</script>
+</body>
+</html>
